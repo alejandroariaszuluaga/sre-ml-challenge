@@ -1,5 +1,6 @@
 ## Ignore some Terraform files
-.tfstate**
+.tfstate
+.tfstate.backup
 
 
 
