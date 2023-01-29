@@ -5,14 +5,14 @@ terraform {
       version = "3.5.0"
     }
   }
+  backend "local" {}
 }
 
 provider "google" {
 #   credentials = file("../../terraform-keys/mytestsproject-375819-752ffdd00eb0.json") # Since I already set this up, it might be enough to uncomment this
 
   project = var.project_resource_id
-  region  = "us-central1"
-  zone    = "us-central1-a"
+  region  = var.region
 }
 
 # # # # # Might prefer to do this here # # # # #
