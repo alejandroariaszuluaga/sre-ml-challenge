@@ -1,6 +1,10 @@
-import pandas as pd
+import sklearn
+import pickle5 as pickle
+# from google.cloud import storage
 
-def hello_gcs(request):
+# storage_client = storage.Client()
+
+def handler(request):
     """Background Cloud Function to be triggered by Cloud Storage.
        This generic function logs relevant data when a file is changed.
     Args:
@@ -12,6 +16,23 @@ def hello_gcs(request):
     Returns:
         None; the output is written to Stackdriver Logging
     """
-    pd_v = f'Imported pandas lib, and has version: {pd.__version__}'
-    print(pd_v)
-    return {'message': pd_v}
+
+    print("Running CF...")
+    request_data = request.form
+    print(f"This was the received form-data: {request_data}")
+
+    # bucket_name = "mytestsproject-375819-input" # <--- Replace by environment var
+    # storage_client = storage.Client()
+    # blobs = storage_client.list_blobs(bucket_name)
+    # # Note: The call returns a response only when the iterator is consumed.
+    # for blob in blobs:
+    #     print(blob.name)
+
+
+
+    # with open('serialized.pkl', 'rb') as f:
+    #     data = pickle.load(f)
+
+
+
+    return { 'message': request_data }

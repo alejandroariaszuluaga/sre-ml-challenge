@@ -19,20 +19,25 @@ resource "google_storage_bucket_object" "zip" {
 # Create the Cloud function triggered by a `Finalize` event on the bucket
 resource "google_cloudfunctions_function" "function" {
     name                  = "function-trigger-on-gcs"
-    runtime               = "python39"  # of course changeable
+    runtime               = "python39"
 
     # Get the source code of the cloud function as a Zip compression
     source_archive_bucket = google_storage_bucket.function_bucket.name
     source_archive_object = google_storage_bucket_object.zip.name
 
     # Must match the function name in the cloud function `main.py` source code
-    entry_point           = "hello_gcs"
+    entry_point           = "handler"
     
     trigger_http = true
 
-    # # 
-    # event_trigger {
-    #     event_type = "google.storage.object.finalize"
-    #     resource   = "${var.project_id}-input"
+    # environment_variables = {
+    #     BUCKET_NAME = google_storage_bucket.function_bucket.name
     # }
+}
+
+# Permissions to access bucket objects where the ML model will be uploaded
+resource "google_project_iam_member" "function_bucket_reader" {
+  project = var.project_resource_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_cloudfunctions_function.function.service_account_email}"
 }

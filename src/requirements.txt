@@ -12,5 +12,5 @@ wincertstore
 zipp
 pandas
 xgboost
-sklearn
+scikit-learn
 pickle5
