@@ -2,6 +2,8 @@ attrs
 cattrs
 certifi
 constructs
+google-cloud
+google-cloud-storage
 importlib-resources
 jsii
 publication

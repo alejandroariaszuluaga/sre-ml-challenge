@@ -27,12 +27,13 @@ resource "google_cloudfunctions_function" "function" {
 
     # Must match the function name in the cloud function `main.py` source code
     entry_point           = "handler"
-    
+
     trigger_http = true
 
-    # environment_variables = {
-    #     BUCKET_NAME = google_storage_bucket.function_bucket.name
-    # }
+    environment_variables = {
+        BUCKET_NAME = google_storage_bucket.function_bucket.name
+        MODEL_FILENAME = google_storage_bucket_object.model.name
+    }
 }
 
 # Permissions to access bucket objects where the ML model will be uploaded
