@@ -10,16 +10,19 @@ BUCKET_NAME = os.environ.get('BUCKET_NAME')
 MODEL_FILENAME = os.environ.get('MODEL_FILENAME')
 
 def handler(request):
-    """Background Cloud Function to be triggered by Cloud Storage.
-       This generic function logs relevant data when a file is changed.
+    """Cloud Function to be triggered by an http request.
+       This function is configured to handle POST requests with a form-payload
+       numeric array (x=[0,0,1,0,1,1,...]), which will then be the input to a
+       Logistic Regression model that will return one of the classes `0` or `1`
+       as part of a JSON response.
+       In case a Python exception is raised, its message will be returned as part
+       of a JSON response.
     Args:
-        event (dict):  The dictionary with data specific to this type of event.
-                       The `data` field contains a description of the event in
-                       the Cloud Storage `object` format described here:
-                       https://cloud.google.com/storage/docs/json_api/v1/objects#resource
-        context (google.cloud.functions.Context): Metadata of triggering event.
+        request: dictionary holding POST request form-payload, it must contain
+        the numeric array as the value for an key named `x`.
     Returns:
-        None; the output is written to Stackdriver Logging
+        result: dictionary with corresponding model output/error message with
+                Python exception content.
     """
 
     try:
