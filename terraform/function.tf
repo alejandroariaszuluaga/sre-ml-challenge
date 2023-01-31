@@ -16,9 +16,9 @@ resource "google_storage_bucket_object" "zip" {
     bucket       = google_storage_bucket.function_bucket.name
 }
 
-# Create the Cloud function triggered by a `Finalize` event on the bucket
+# Create the Cloud function triggered by an HTTP request
 resource "google_cloudfunctions_function" "function" {
-    name                  = "function-trigger-on-gcs"
+    name                  = "function-run-pickle-model"
     runtime               = "python39"
 
     # Get the source code of the cloud function as a Zip compression
@@ -28,7 +28,7 @@ resource "google_cloudfunctions_function" "function" {
     # Must match the function name in the cloud function `main.py` source code
     entry_point           = "handler"
 
-    trigger_http = true
+    trigger_http          = true
 
     environment_variables = {
         BUCKET_NAME = google_storage_bucket.function_bucket.name
