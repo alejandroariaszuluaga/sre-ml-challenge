@@ -37,6 +37,7 @@ This will deploy a Cloud Storage bucket where both the Cloud Function's code (zi
 foo@bar:~$ curl -X POST -d 'x=[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]' -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-mytestsproject-375819.cloudfunctions.net/function-run-pickle-model
 
 > {"model_prediction":"[1]","received_data":{"x":"[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]"}}
+
 ```
 
 # Project Structure
