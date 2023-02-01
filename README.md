@@ -31,11 +31,12 @@ gcloud auth application-default login
     1. Check the previous command's output and run `terraform apply --auto-approve`
 
 
-This will deploy a Cloud Storage bucket where both the Cloud Function's code (zip package), and the `pickle_model.pkl` model file will be stored. It'll also make the function available through an endpoint with the form `https://<gcp-region>-<gcp-project-id>.cloudfunctions.net/<function-name>`. This function is configured to handle POST requests with a form-based payload, see below an example on how to trigger this function via `curl`, using (an already `gcloud` authenticated) shell commands:
+This will deploy a Cloud Storage bucket where both the Cloud Function's code (zip package), and the `pickle_model.pkl` model file will be stored. It'll also make the function available through an endpoint with the form `https://<gcp-region>-<gcp-project-id>.cloudfunctions.net/<function-name>`. This function is configured to handle POST requests with a form-based payload, see below an example on how to trigger this function via `curl`, using (an already `gcloud` authenticated) shell commands, as well as a sample response from it:
 
 ```console
 foo@bar:~$ curl -X POST -d 'x=[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]' -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-mytestsproject-375819.cloudfunctions.net/function-run-pickle-model
-{"model_prediction":"[1]","received_data":{"x":"[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]"}}
+
+> {"model_prediction":"[1]","received_data":{"x":"[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0]"}}
 ```
 
 # Project Structure
@@ -62,7 +63,7 @@ All `.tf` and GCP IaC-related files live here. All information related to the Te
 In order to be able to call this function's endpoint, the use needs to use an authorized IAM user. 
 
 ### Bearer Token
-At the moment of writing this, only the main owner of this function would be able to generate the corresponding bearer token that this endpoint requires.
+At the moment of writing this, only the main owner of this function would be able to generate the corresponding bearer token that this endpoint requires. This can be modified in order to give permissions to a different IAM user, such that other users may have access to the API as well.
 
 ### IP Access Restrictions
 By adding a network configuration and a number of firewall rules that define which CIDRs are allowed to invoke the function, traffic from certain IPs can be restricted.
@@ -73,10 +74,11 @@ Also, a VPC can be setup so that the function is able to interact only with elem
 ## Load Tests
 The load-tests directory holds a simple `.lua` script that was developed to be used by [wrk - a HTTP benchmarking tool](https://github.com/wg/wrk), the `<gcloud-bearer-token>` should be replaced by the output of `gcloud auth print-identity-token` before running the load test.
 
-The results that were obtained by getting >50000 requests in 45 seconds can be observed (and can be reproduced by installing the `wrk` tool and running the `.lua` script in this repositor) below:
+The results that were obtained by getting >50000 requests (this was a requirement defined by the challenge, so I just tried different load test configuration until the required number of requests were hit under the time interval) in 45 seconds can be observed (and can be reproduced by installing the `wrk` tool and running the `.lua` script in this repositor) below:
 
 ```console
 foo@bar:~$ ./wrk -t 3 -c 190 -d 45s -s scripts/cf-pickle.lua --latency https://us-central1-mytestsproject-375819.cloudfunctions.net/function-run-pickle-model
+
 Running 45s test @ https://us-central1-mytestsproject-375819.cloudfunctions.net/function-run-pickle-model
   3 threads and 190 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
@@ -108,7 +110,8 @@ The main SLOs and SLIs that are relevant for this scenario, according to my own 
     * Request success rate.
     * Uptime: since this is a serverless and stateless architecture, this metrics would greatly be related to Google Cloud's SLA.
 1. API Latency:
-    * Response time (P95): we should go 
-1. API Throughput: 
+    * Response time (P95): this metrics is more reliable and accurate to reality, than simple average metric. 
+1. API Throughput:
+    * Requests per second.
 1. Resource Utilization:
     * Memory: this one is important to keep around, in case the ML model is replaced by a heavier one, it might get to the point where the function's resources are not enough, and should be increased accordingly.
