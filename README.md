@@ -59,19 +59,7 @@ All `.tf` and GCP IaC-related files live here. All information related to the Te
 
 **IMPORTANT:** when getting started to build this infrastructure, the user must have an existing project with billing enabled, as well as the corresponding GCP resources' APIs enabled (these are not enabled by default, Terraform will prompt with an error that provides corresponding links where the user may enable these APIs). The `terraform.tfvars` variables' values should be replaced by the corresponding project ID and the GCP region where these resources should be created.
 
-## Authorization
-In order to be able to call this function's endpoint, the use needs to use an authorized IAM user. 
-
-### Bearer Token
-At the moment of writing this, only the main owner of this function would be able to generate the corresponding bearer token that this endpoint requires. This can be modified in order to give permissions to a different IAM user, such that other users may have access to the API as well.
-
-### IP Access Restrictions
-By adding a network configuration and a number of firewall rules that define which CIDRs are allowed to invoke the function, traffic from certain IPs can be restricted.
-
-### VPC Access
-Also, a VPC can be setup so that the function is able to interact only with elements inside the VPC.
-
-## Load Tests
+# Load Tests
 The load-tests directory holds a simple `.lua` script that was developed to be used by [wrk - a HTTP benchmarking tool](https://github.com/wg/wrk), the `<gcloud-bearer-token>` should be replaced by the output of `gcloud auth print-identity-token` before running the load test.
 
 The results that were obtained by getting >50000 requests (this was a requirement defined by the challenge, so I just tried different load test configuration until the required number of requests were hit under the time interval) in 45 seconds can be observed (and can be reproduced by installing the `wrk` tool and running the `.lua` script in this repositor) below:
@@ -95,7 +83,7 @@ Requests/sec:   1131.97
 Transfer/sec:    619.33KB
 ```
 
-## Improving Performance
+# Improving Performance
 There are several possible upgrades that may be implemented to improve performance:
 
 1. Cache ML pickle model: currently, this model is loaded directly from a Cloud Storage bucket, a caching method that is able to deliver this object faster would improve this loading process.
@@ -103,7 +91,20 @@ There are several possible upgrades that may be implemented to improve performan
 1. Increase the Cloud Function autoscaling minimum instances in response to the request load received.
 1. Have regional redundancy, by deploying different functions into variant regions.
 
-## SLOs and SLIs
+
+# Authorization Mechanisms
+In order to be able to call this function's endpoint, the use needs to use an authorized IAM user. 
+
+### Bearer Token
+At the moment of writing this, only the main owner of this function would be able to generate the corresponding bearer token that this endpoint requires. This can be modified in order to give permissions to a different IAM user, such that other users may have access to the API as well.
+
+### IP Access Restrictions
+By adding a network configuration and a number of firewall rules that define which CIDRs are allowed to invoke the function, traffic from certain IPs can be restricted.
+
+### VPC Access
+Also, a VPC can be setup so that the function is able to interact only with elements inside the VPC.
+
+# SLOs and SLIs
 The main SLOs and SLIs that are relevant for this scenario, according to my own concepts and opinion, are:
 
 1. API Availability:
