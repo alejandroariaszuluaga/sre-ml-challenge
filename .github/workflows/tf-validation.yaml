@@ -1,4 +1,4 @@
-name: Terraform deployment
+name: Terraform and Trivy validation
 
 on:
   issue_comment:
@@ -10,12 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if comment says 'deploy'
+      - name: Check if comment says 'test'
         id: comment-check
         uses: actions/bin/filter@v1
         with:
           args: comment
-          comment: 'deploy'
+          comment: 'test'
 
       - name: Checkout code
         if: steps.comment-check.outputs.matched == 'true'
