@@ -1,0 +1,44 @@
+name: Terraform deployment
+
+on:
+  issue_comment:
+    types:
+      - "created"
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if comment says 'deploy'
+        id: comment-check
+        uses: actions/bin/filter@v1
+        with:
+          args: comment
+          comment: 'deploy'
+
+      - name: Checkout code
+        if: steps.comment-check.outputs.matched == 'true'
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        if: steps.comment-check-.outputs.matched == 'true'
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.3.7
+
+      - name: Run Trivy scan
+        if: steps.comment-check.outputs.matched == 'true'
+        run: |
+          sudo apt-get update && sudo apt-get install -y wget unzip
+          wget https:/github.com/aquasecurity/trivy/releases/download/v0.12.0/trivy_0.12.0_Linux-64bit.tar.gz
+          tar xvf trivy_0.12.0_Linux-64bit.tar.gz
+          sudo mv trivy /usr/local/bin/
+          trivy --quiet --severity CRITICAL,HIGH .
+
+      - name: Terraform validate
+        if: steps.comment-check.outputs.matched == 'true'
+        run: terraform validate
+
+
+
