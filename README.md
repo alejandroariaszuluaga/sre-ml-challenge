@@ -43,11 +43,15 @@ foo@bar:~$ curl -X POST -d 'x=[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0
 # Project Structure
 
     .
+    ├── .github/workflows      # GitHub Actions Workflows for Continuous Integration checks
     ├── load-tests             # Load tests script (.lua)
     ├── model-files            # Provided files related to code challenge
     ├── src                    # Cloud Function source files
     ├── terraform              # GCP IaC Terraform files
     └── README.md
+
+## GitHub Actions Workflows
+Currently, this project has a PyLint GHA pipeline that verifies all Python's syntax code.
 
 ## Cloud Function Source
 CF code ZIP package will be created by Terraform and it'll include dependencies specified in the `requirements.txt` file.
@@ -125,3 +129,5 @@ The main SLOs and SLIs that are relevant for this scenario, according to my own 
     * Response time (P90): this metric is more reliable and accurate to reality, than simple average metric.
 1. Resource Utilization lower than 256MB:
     * Memory: this one is important to keep around, in case the ML model is replaced by a heavier one, it might get to the point where the function's resources are not enough, and should be increased accordingly.
+
+
