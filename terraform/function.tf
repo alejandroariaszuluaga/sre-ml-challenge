@@ -31,6 +31,7 @@ resource "google_cloudfunctions_function" "function" {
     trigger_http          = true
 
     environment_variables = {
+        LOG_LEVEL = "DEBUG"
         BUCKET_NAME = google_storage_bucket.function_bucket.name
         MODEL_FILENAME = google_storage_bucket_object.model.name
     }

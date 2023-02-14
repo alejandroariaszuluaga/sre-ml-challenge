@@ -84,6 +84,13 @@ Requests/sec:   1131.97
 Transfer/sec:    619.33KB
 ```
 
+## Load Test Parameters
+The selected parameters, as well as their influence in each load test, were the following:
+
+    * 3 threads: this is proportionally related to how many simultaneous requests can be sent to the application. The more complex the load test workflow is, the longer each thread will finish its task and will become available for another run. How many threads can be run depends on the system's memory and CPU in which it's run. Each thread may be considered as a user hitting the application from an independent machine.
+    * 190 connections: this parameter indicates how many HTTP connections each thread will handle. Depending on how long the load test workflow takes to finish, each http request will finish and consequently the thread will become available to run another request.
+    * Duration of 45 seconds: this indicates how long each thread will remain open and hitting the application.
+
 # Improving Performance
 There are several possible upgrades that may be implemented to improve performance:
 
@@ -94,7 +101,10 @@ There are several possible upgrades that may be implemented to improve performan
 
 
 # Authorization Mechanisms
-In order to be able to call this function's endpoint, the use needs to use an authorized IAM user. 
+In order to be able to call this function's endpoint, the use needs to use an authorized IAM user.
+
+## Performance Implications
+This specific kind of authentication increases the latency of the application at two fronts: first, generating the bearer token depends on the user's connection to the authorizer (in this case, the response time of `gcloud auth`); second, the backend (the Cloud Function) authorization token's processing time, which mostly depends on how Google Cloud Functions handle each request whenever it gets the `Authorization` header.
 
 ### Bearer Token
 At the moment of writing this, only the main owner of this function would be able to generate the corresponding bearer token that this endpoint requires. This can be modified in order to give permissions to a different IAM user, such that other users may have access to the API as well.
@@ -108,12 +118,10 @@ Also, a VPC can be setup so that the function is able to interact only with elem
 # SLOs and SLIs
 The main SLOs and SLIs that are relevant for this scenario, according to my own concepts and opinion, are:
 
-1. API Availability:
+1. API Availability of 99.95%:
     * Request success rate.
-    * Uptime: since this is a serverless and stateless architecture, this metrics would greatly be related to Google Cloud's SLA.
-1. API Latency:
-    * Response time (P95): this metrics is more reliable and accurate to reality, than simple average metric. 
-1. API Throughput:
-    * Requests per second.
-1. Resource Utilization:
+    * Uptime: since this is a serverless and stateless architecture, this metrics would greatly be related to Google Cloud Functions Service's SLA.
+1. API Latency P90 response time shorter than 400ms (based on load tests' results):
+    * Response time (P90): this metric is more reliable and accurate to reality, than simple average metric.
+1. Resource Utilization lower than 256MB:
     * Memory: this one is important to keep around, in case the ML model is replaced by a heavier one, it might get to the point where the function's resources are not enough, and should be increased accordingly.
