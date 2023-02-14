@@ -16,4 +16,6 @@ jobs:
           terraform_version: 1.3.7
 
       - name: Terraform validate
-        run: terraform validate
+        run: |
+          terraform init
+          terraform validate terraform/
