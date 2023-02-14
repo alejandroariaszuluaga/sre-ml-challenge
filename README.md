@@ -51,7 +51,7 @@ foo@bar:~$ curl -X POST -d 'x=[0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0
     └── README.md
 
 ## GitHub Actions Workflows
-Currently, this project has a Terraform validate as well as a PyLint GHA pipeline that verifies all Terraform and Python syntax code.
+Currently, this project has a PyLint GHA pipeline that verifies all Python's syntax code.
 
 ## Cloud Function Source
 CF code ZIP package will be created by Terraform and it'll include dependencies specified in the `requirements.txt` file.
