@@ -1,4 +1,4 @@
-#pylint: disable = line-too-long, too-many-lines, no-name-in-module, import-error, multiple-imports, pointless-string-statement, wrong-import-order, broad-exception-caught, logging-fstring-interpolation, invalid-name, f-string-without-interpolation
+#pylint: disable = line-too-long, too-many-lines, no-name-in-module, import-error, multiple-imports, pointless-string-statement, wrong-import-order, broad-exception-caught, logging-fstring-interpolation, invalid-name, f-string-without-interpolation, wrong-import-position
 
 """Allows to convert from string to astype"""
 import ast
