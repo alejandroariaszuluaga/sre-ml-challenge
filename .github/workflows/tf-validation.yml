@@ -1,4 +1,4 @@
-name: Terraform and Trivy validation
+name: Terraform validation
 
 on: [push]
 

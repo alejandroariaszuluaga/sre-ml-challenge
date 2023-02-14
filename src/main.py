@@ -1,10 +1,16 @@
-#pylint: disable = line-too-long, too-many-lines, no-name-in-module, import-error, multiple-imports, pointless-string-statement, wrong-import-order
+#pylint: disable = line-too-long, too-many-lines, no-name-in-module, import-error, multiple-imports, pointless-string-statement, wrong-import-order, broad-exception-caught, logging-fstring-interpolation, invalid-name, f-string-without-interpolation
 
+"""Allows to convert from string to astype"""
 import ast
+"""Programatic Access to GCP Cloud Storage"""
 from google.cloud import storage
+"""Replace prints by logging module"""
 import logging
+"""Gets environment variables"""
 import os
+"""Loads LogisticRegression SciKit-Learn model"""
 import pickle5 as pickle
+"""Prints the whole error message when an exception occurs"""
 import traceback
 
 storage_client = storage.Client()
