@@ -1,9 +1,5 @@
 name: Terraform and Trivy validation
 
-# on:
-#   issue_comment:
-#     types:
-#       - "created"
 on: [push]
 
 jobs:

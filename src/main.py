@@ -1,3 +1,5 @@
+#pylint: disable = line-too-long, too-many-lines, no-name-in-module, import-error, multiple-imports, pointless-string-statement, wrong-import-order
+
 import ast
 from google.cloud import storage
 import logging
